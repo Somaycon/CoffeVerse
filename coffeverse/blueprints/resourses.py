@@ -2,6 +2,10 @@ from flask import Flask, render_template, redirect, jsonify, request
 from coffeverse.extensions.database import db
 from coffeverse.models.cliente import Cliente
 from coffeverse.models.motoboy import Motoboy
+from coffeverse.models.pedido import Pedido
+from coffeverse.models.itens_pedidos import ItemDoPedido
+
+#cliente
 
 def init_app(app):
   @app.route('/api/clientes', methods=['GET'])
@@ -84,6 +88,7 @@ def init_app(app):
       db.session.rollback()
       return jsonify({"error": str(e)}), 500
 
+#motoboy
 
   @app.route('/api/motoboys', methods=['GET'])
   def get_all_motoboys():
@@ -154,3 +159,153 @@ def init_app(app):
     except Exception as e:
       db.session.rollback()
       return jsonify({"error": str(e)}), 500
+    
+#pedidos
+
+  @app.route('/api/pedidos', methods=['GET'])
+  def get_all_pedidos():
+      pedidos = Pedido.query.all()
+      return jsonify([pedido.to_dict() for pedido in pedidos])
+
+  @app.route('/api/pedidos/<int:id>', methods=['GET'])
+  def get_pedido_by_id(id):
+      pedido = Pedido.query.get_or_404(id)
+      return jsonify(pedido.to_dict())
+
+  @app.route('/api/pedidos', methods=['POST'])
+  def create_pedido():
+      try:
+          response = request.get_json()
+
+          if not response or not all(key in response for key in ["cliente_id", "endereco_id", "data", "total"]):
+                return jsonify({"error": "Dados incompletos"}), 400
+
+          novo_pedido = Pedido(
+              cliente_id=response['cliente_id'],
+              endereco_id=response['endereco_id'],
+              data=response['data'],
+              total=response['total']
+          )
+
+          db.session.add(novo_pedido)
+          db.session.commit()
+          return jsonify(novo_pedido.to_dict()), 201
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500
+
+  @app.route('/api/pedidos/<int:id>', methods=['PUT'])
+  def edit_pedido(id):
+      try:
+          pedido = Pedido.query.get(id)
+          if not pedido:
+              return jsonify({"error": "Pedido não encontrado!"}), 404
+
+          response = request.get_json()
+
+          if "cliente_id" in response:
+              pedido.cliente_id = response['cliente_id']
+          if "endereco_id" in response:
+              pedido.endereco_id = response['endereco_id']
+          if "data" in response:
+              pedido.data = response['data']
+          if "total" in response:
+              pedido.total = response['total']
+
+          db.session.commit()
+          return jsonify(pedido.to_dict()), 200
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500
+
+  @app.route('/api/pedidos/<int:id>', methods=['DELETE'])
+  def delete_pedido(id):
+      try:
+          pedido = Pedido.query.get(id)
+          if not pedido:
+              return jsonify({"error": "Pedido não encontrado!"}), 404
+
+          db.session.delete(pedido)
+          db.session.commit()
+          return jsonify({"message": f"Pedido com ID {id} foi excluído com sucesso!"}), 200
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500
+
+#Itens do Pedido
+    
+  @app.route('/api/itens_do_pedido', methods=['GET'])
+  def get_all_itens():
+      itens = ItemDoPedido.query.all()
+      return jsonify([item.to_dict() for item in itens])
+
+  @app.route('/api/itens_do_pedido/<int:id>', methods=['GET'])
+  def get_item_by_id(id):
+      item = ItemDoPedido.query.get_or_404(id)
+      return jsonify(item.to_dict())
+
+  @app.route('/api/itens_do_pedido', methods=['POST'])
+  def create_item():
+      try:
+          response = request.get_json()
+
+          if not response or not all(key in response for key in ["pedido_id", "produto_id", "quantidade", "preco_unitario"]):
+              return jsonify({"error": "Dados incompletos"}), 400
+
+          novo_item = ItemDoPedido(
+              pedido_id=response['pedido_id'],
+              produto_id=response['produto_id'],
+              quantidade=response['quantidade'],
+              preco_unitario=response['preco_unitario']
+          )
+
+          db.session.add(novo_item)
+          db.session.commit()
+          return jsonify(novo_item.to_dict()), 201
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500
+
+  @app.route('/api/itens_do_pedido/<int:id>', methods=['PUT'])
+  def edit_item(id):
+      try:
+          item = ItemDoPedido.query.get(id)
+          if not item:
+              return jsonify({"error": "Item não encontrado!"}), 404
+
+          response = request.get_json()
+
+          if "pedido_id" in response:
+              item.pedido_id = response['pedido_id']
+          if "produto_id" in response:
+              item.produto_id = response['produto_id']
+          if "quantidade" in response:
+              item.quantidade = response['quantidade']
+          if "preco_unitario" in response:
+              item.preco_unitario = response['preco_unitario']
+
+          db.session.commit()
+          return jsonify(item.to_dict()), 200
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500
+
+  @app.route('/api/itens_do_pedido/<int:id>', methods=['DELETE'])
+  def delete_item(id):
+      try:
+          item = ItemDoPedido.query.get(id)
+          if not item:
+              return jsonify({"error": "Item não encontrado!"}), 404
+
+          db.session.delete(item)
+          db.session.commit()
+          return jsonify({"message": f"Item com ID {id} foi excluído com sucesso!"}), 200
+
+      except Exception as e:
+          db.session.rollback()
+          return jsonify({"error": str(e)}), 500

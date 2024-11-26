@@ -5,5 +5,5 @@ SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:root@localhost/coffeverse"
 SQLALCHEMY_TRACK_MODIFICATIONS = false
 EXTENSIONS = [
 "coffeverse.extensions.database",
-"coffeverse.blueprints.views",
+"coffeverse.blueprints.resourses",
 ]

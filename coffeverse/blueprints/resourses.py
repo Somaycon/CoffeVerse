@@ -4,6 +4,7 @@ from coffeverse.models.cliente import Cliente
 from coffeverse.models.motoboy import Motoboy
 from coffeverse.models.pedido import Pedido
 from coffeverse.models.itens_pedidos import ItemDoPedido
+from coffeverse.models.endereco_entrega import EnderecoEntrega
 
 #cliente
 
@@ -236,7 +237,7 @@ def init_app(app):
           return jsonify({"error": str(e)}), 500
 
 #Itens do Pedido
-    
+
   @app.route('/api/itens_do_pedido', methods=['GET'])
   def get_all_itens():
       itens = ItemDoPedido.query.all()
@@ -309,3 +310,86 @@ def init_app(app):
       except Exception as e:
           db.session.rollback()
           return jsonify({"error": str(e)}), 500
+      
+      # Endereco de Entrega
+
+def init_app(app):
+    @app.route('/api/enderecos_entrega', methods=['GET'])
+    def get_all_enderecos():
+        enderecos = EnderecoEntrega.query.all()
+        return jsonify([endereco.to_dict() for endereco in enderecos])
+
+    @app.route('/api/enderecos_entrega/<int:id>', methods=['GET'])
+    def get_endereco_by_id(id):
+        endereco = EnderecoEntrega.query.get_or_404(id)
+        return jsonify(endereco.to_dict())
+
+    @app.route('/api/enderecos_entrega', methods=['POST'])
+    def create_endereco():
+        try:
+            response = request.get_json()
+
+            if not response or not all(key in response for key in ["cliente_id", "rua", "numero", "cep"]):
+                return jsonify({"error": "Dados incompletos"}), 400
+
+            novo_endereco = EnderecoEntrega(
+                cliente_id=response['cliente_id'],
+                rua=response['rua'],
+                numero=response['numero'],
+                complemento=response.get('complemento'),
+                bairro=response.get('bairro'),
+                cidade=response.get('cidade'),
+                cep=response['cep']
+            )
+
+            db.session.add(novo_endereco)
+            db.session.commit()
+            return jsonify(novo_endereco.to_dict()), 201
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/api/enderecos_entrega/<int:id>', methods=['PUT'])
+    def edit_endereco(id):
+        try:
+            endereco = EnderecoEntrega.query.get(id)
+            if not endereco:
+                return jsonify({"error": "Endereço não encontrado!"}), 404
+
+            response = request.get_json()
+
+            if "rua" in response:
+                endereco.rua = response['rua']
+            if "numero" in response:
+                endereco.numero = response['numero']
+            if "complemento" in response:
+                endereco.complemento = response['complemento']
+            if "bairro" in response:
+                endereco.bairro = response['bairro']
+            if "cidade" in response:
+                endereco.cidade = response['cidade']
+            if "cep" in response:
+                endereco.cep = response['cep']
+
+            db.session.commit()
+            return jsonify(endereco.to_dict()), 200
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
+
+    @app.route('/api/enderecos_entrega/<int:id>', methods=['DELETE'])
+    def delete_endereco(id):
+        try:
+            endereco = EnderecoEntrega.query.get(id)
+            if not endereco:
+                return jsonify({"error": "Endereço não encontrado!"}), 404
+
+            db.session.delete(endereco)
+            db.session.commit()
+            return jsonify({"message": f"Endereço com ID {id} foi excluído com sucesso!"}), 200
+
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500

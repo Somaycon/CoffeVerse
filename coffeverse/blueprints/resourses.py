@@ -3,7 +3,7 @@ from coffeverse.extensions.database import db
 from coffeverse.models.cliente import Cliente
 from coffeverse.models.motoboy import Motoboy
 from coffeverse.models.pedido import Pedido
-from coffeverse.models.itens_pedidos import ItemDoPedido
+from coffeverse.models.itens_pedidos import ItensDoPedido
 
 #cliente
 
@@ -239,12 +239,12 @@ def init_app(app):
     
   @app.route('/api/itens_do_pedido', methods=['GET'])
   def get_all_itens():
-      itens = ItemDoPedido.query.all()
+      itens = ItensDoPedido.query.all()
       return jsonify([item.to_dict() for item in itens])
 
   @app.route('/api/itens_do_pedido/<int:id>', methods=['GET'])
   def get_item_by_id(id):
-      item = ItemDoPedido.query.get_or_404(id)
+      item = ItensDoPedido.query.get_or_404(id)
       return jsonify(item.to_dict())
 
   @app.route('/api/itens_do_pedido', methods=['POST'])
@@ -255,7 +255,7 @@ def init_app(app):
           if not response or not all(key in response for key in ["pedido_id", "produto_id", "quantidade", "preco_unitario"]):
               return jsonify({"error": "Dados incompletos"}), 400
 
-          novo_item = ItemDoPedido(
+          novo_item = ItensDoPedido(
               pedido_id=response['pedido_id'],
               produto_id=response['produto_id'],
               quantidade=response['quantidade'],
@@ -273,7 +273,7 @@ def init_app(app):
   @app.route('/api/itens_do_pedido/<int:id>', methods=['PUT'])
   def edit_item(id):
       try:
-          item = ItemDoPedido.query.get(id)
+          item = ItensDoPedido.query.get(id)
           if not item:
               return jsonify({"error": "Item não encontrado!"}), 404
 
@@ -298,7 +298,7 @@ def init_app(app):
   @app.route('/api/itens_do_pedido/<int:id>', methods=['DELETE'])
   def delete_item(id):
       try:
-          item = ItemDoPedido.query.get(id)
+          item = ItensDoPedido.query.get(id)
           if not item:
               return jsonify({"error": "Item não encontrado!"}), 404
 

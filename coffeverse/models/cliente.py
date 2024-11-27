@@ -9,6 +9,9 @@ class Cliente(db.Model):
   endereco = db.Column(db.String(255), nullable=False)
   senha = db.Column(db.String(255), nullable=False)
 
+  pedidos = db.relationship('Pedido', back_populates='cliente')
+  enderecos = db.relationship('EnderecoDeEntrega', back_populates='cliente')
+
   def to_dict(self):
     return{
       "id": self.id,

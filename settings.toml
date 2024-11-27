@@ -6,4 +6,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = false
 EXTENSIONS = [
 "coffeverse.extensions.database",
 "coffeverse.blueprints.resourses",
+"coffeverse.blueprints.views",
 ]

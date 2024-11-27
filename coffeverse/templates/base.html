@@ -1,0 +1,58 @@
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %} Drawer com Design {% endblock %}</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/drawer.css')}}">
+</head>
+
+<body>
+  <!-- Menu Superior -->
+  <header class="top-menu">
+    <div class="logo">
+      <img src="{{url_for('static', filename='images/5.png')}}" alt="Logo">
+    </div>
+    <button id="open-drawer" class="drawer-button">☰</button>
+  </header>
+
+  <main>
+    {% block content %} {% endblock %}
+  </main>
+
+  <!-- Drawer -->
+  <div id="drawer" class="drawer">
+    <div class="profile-header">
+      <img src="user-avatar.png" alt="Avatar do Usuário" class="avatar">
+      <h2 class="username">João Vitor</h2>
+    </div>
+    <div class="menu-options">
+      <a href="#configurar" class="menu-item">
+        <img src="settings-icon.png" alt="Configurar">
+        Configurar
+        <span class="arrow">➤</span>
+      </a>
+      <a href="#seguranca" class="menu-item">
+        <img src="security-icon.png" alt="Segurança">
+        Segurança
+        <span class="arrow">➤</span>
+      </a>
+      <a href="#historico" class="menu-item">
+        <img src="history-icon.png" alt="Histórico de Compras">
+        Histórico de Compras
+        <span class="arrow">➤</span>
+      </a>
+      <a href="#pagamentos" class="menu-item">
+        <img src="payment-icon.png" alt="Pagamentos">
+        Pagamentos
+        <span class="arrow">➤</span>
+      </a>
+    </div>
+    <button class="disconnect-button">DISCONNECT</button>
+    <button id="close-drawer" class="close-btn">✖</button>
+  </div>
+
+  <script src="{{url_for('static', filename='js/drawer.js')}}"></script>
+</body>
+
+</html>

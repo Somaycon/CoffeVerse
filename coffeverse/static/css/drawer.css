@@ -1,0 +1,129 @@
+/* Estilos Gerais */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Menu Superior */
+.top-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(78, 8, 8);
+  color: #fff;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+  height: 100px;
+}
+
+.drawer-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  /* Fora da tela inicialmente */
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: right 0.3s ease;
+}
+
+.drawer.open {
+  right: 0;
+  /* Aparece na tela */
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  color: white;
+  ;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Cabeçalho do Perfil */
+.profile-header {
+  background-color: rgb(78, 8, 8);
+  ;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border-color: grey;
+}
+
+.username {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Opções de Menu */
+.menu-options {
+  padding: 20px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #4e3c2a;
+  margin: 15px 0;
+  font-size: 16px;
+}
+
+.menu-item img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.arrow {
+  margin-left: auto;
+  color: rgb(78, 8, 8);
+  ;
+}
+
+/* Botão Disconnect */
+.disconnect-button {
+  background-color: rgb(78, 8, 8);
+  ;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+.disconnect-button:hover {
+  background-color: rgb(78, 8, 8);
+  ;
+}

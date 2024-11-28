@@ -7,6 +7,7 @@ class Pedido(db.Model):
     endereco_id = db.Column(db.Integer, db.ForeignKey('tb_enderecos_de_entrega.id'), nullable = False)
     data = db.Column(db.DateTime, nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
+    
     cliente = db.relationship('Cliente', back_populates='pedidos')
     endereco = db.relationship('EnderecoDeEntrega', back_populates='pedidos')
 
